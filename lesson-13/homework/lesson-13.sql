@@ -31,5 +31,6 @@ SELECT STUFF('abcdefg', 1, 5, '');
 -- 8. Extract a Word → Extract second word from 'SQL is powerful', 'I love databases'.
 
 
+
 9️⃣ Round a Number → Round 15.6789 to 2 decimal places.
 🔟 Absolute Value → Find absolute value of -345.67.
