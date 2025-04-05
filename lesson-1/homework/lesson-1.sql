@@ -1,5 +1,5 @@
 -- ===================
--- II. MEDIUM
+-- I. EASY
 -- ===================
 
 /* 
@@ -34,7 +34,7 @@ record, and each column represents a specific attribute of that record.
 */
 
 -- ===================
--- III. HARD
+-- II. MEDIUM
 -- ===================
 
 -- 4. Create a new database in SSMS named SchoolDB.
@@ -138,5 +138,74 @@ COMMIT;
 ROLLBACK TO BeforeUpdate;
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+-- 8. Write a query to insert three records into the Students table.
+
+INSERT INTO Students VALUES
+  (1, 'Timur', 34),
+	(2, 'John', 24),
+	(3, 'Robert', 35);
+
+-- 9. Create a backup of your SchoolDB database and restore it. (write its steps to submit)
+
+/*
+
+===> CREATING A BACKUP OF SchoolDB:
+
+Method 1: Using SQL Server Management Studio (SSMS) GUI
+
+1. Open SSMS and connect to your SQL Server instance
+2. Expand Databases in Object Explorer
+3. Right-click on SchoolDB → Tasks → Back Up...
+4. In the Backup dialog:
+  - Backup type: Full
+  - Backup component: Database
+  - Destination: Click Add to specify file location (e.g., C:\Backups\SchoolDB_Backup.bak)
+5. Click OK to execute the backup
+6. Verify backup completed successfully in the Messages tab
+
+Method 2: Using T-SQL Command */
+
+BACKUP DATABASE SchoolDB 
+TO DISK = 'C:\Backups\SchoolDB_Backup.bak'
+WITH 
+   COMPRESSION,
+   STATS = 10,
+   NAME = 'SchoolDB-Full Backup';
+GO
+
+/*
+
+====> RESTORING SchoolDB
+
+Method 1: Using SSMS GUI
+
+1. Open SSMS and connect to your SQL Server instance
+2. Right-click Databases → Restore Database...
+3. In the Restore dialog:
+  - Source: Select "Device" and click the browse (...) button
+  - Add your backup file (SchoolDB_Backup.bak)
+  - Select the backup set to restore
+4. In the Options page:
+  - Check "Overwrite the existing database"
+  - Verify file paths for data and log files
+5. Click OK to execute the restore
+6. Verify restore completed successfully
+
+Method 2: Using T-SQL Command */
+
+USE [master]
+GO
+
+RESTORE DATABASE SchoolDB 
+FROM DISK = 'C:\Backups\SchoolDB_Backup.bak'
+WITH 
+   MOVE 'SchoolDB' TO 'C:\Data\SchoolDB.mdf',
+   MOVE 'SchoolDB_Log' TO 'C:\Data\SchoolDB_Log.ldf',
+   REPLACE,
+   STATS = 10;
+GO
+
 
      
