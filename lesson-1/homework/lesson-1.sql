@@ -34,7 +34,7 @@ record, and each column represents a specific attribute of that record.
 */
 
 -- ===================
--- II. MEDIUM
+-- III. HARD
 -- ===================
 
 -- 4. Create a new database in SSMS named SchoolDB.
