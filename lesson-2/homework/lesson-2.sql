@@ -101,11 +101,17 @@ TRUNCATE TABLE Employees;
 -- Intermediate-Level Tasks (6)
 
 -- 11. Insert five records into the Departments table using INSERT INTO SELECT from an existing table.
+CREATE TABLE Employees (EmpID INT, Name VARCHAR(50), Salary DECIMAL(10,2), DepartmentID INT, DepartmentName VARCHAR(50));
+
+INSERT INTO Employess VALUES
+	(1, 'Lary', 4000, 2, 'HR'),
+	(2, 'Laura', 3500, 1, 'Finance'),
+	(3, 'Steven', 4500, 3, 'Operations');
 
 INSERT INTO Departments (DepartmentID, DepartmentName)
 SELECT 
-	EmpId AS DepartmentId, 
-	Department AS DepartmenName
+	DepartmentId, 
+	DepartmenName
 FROM Employees;
 
 SELECT * FROM Departments
@@ -174,7 +180,7 @@ INSERT INTO Products VALUES
 	(2, 'Helmet', 'Mountain', 5000, 300),
 	(3, 'Gloves', 'City', 2000, 2000),
 	(4, 'Socks', 'Long', 500, 5000),
-	(5, 'T-shirt', 'Blue', 300, DEFAULT);
+	(5, 'T-shirt', 'Blue', 300, 100);
 	
 	
 -- 22. Use SELECT INTO to create a backup table called Products_Backup containing all Products data.
