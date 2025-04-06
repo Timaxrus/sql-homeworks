@@ -191,7 +191,7 @@ EXEC sp_rename 'Products', 'Inventory';
 -- 24. Alter the Inventory table to change the data type of Price from DECIMAL(10,2) to FLOAT.
 
 ALTER TABLE Inventory
-DROP CONSTRAINT CK__Products__Price__74AE54BC;
+DROP CONSTRAINT CK_Products_Price_Positive;
 
 ALTER TABLE Inventory
 ALTER COLUMN Price FLOAT;
