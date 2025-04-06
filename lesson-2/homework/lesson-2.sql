@@ -133,3 +133,72 @@ EXEC sp_rename 'Employees', 'StaffMembers';
 -- 16. Write a query to completely remove the Departments table from the database.
 
 DROP TABLE Departments;
+
+
+-- Advanced-Level Tasks (9)
+
+-- 17. Create a table named Products with at least 5 columns, including: ProductID (Primary Key), ProductName (VARCHAR), Category (VARCHAR), Price (DECIMAL)
+
+CREATE TABLE Products (
+	ProductID INT PRIMARY KEY, 
+	ProductName VARCHAR(50),
+	Category VARCHAR(50),
+	Price DECIMAL);
+
+-- 18. Add a CHECK constraint to ensure Price is always greater than 0.
+
+ALTER TABLE Products
+ADD CONSTRAINT CK_Products_Price_Positive   -- Adding named contraint 'CK_Products_Price_Positive
+CHECK (Price > 0);
+
+ALTER TABLE Products
+ADD CHECK (Price > 0);                   -- Adding check contraint without a named constraint
+
+-- 19. Modify the table to add a StockQuantity column with a DEFAULT value of 50.
+
+ALTER TABLE Products 
+ADD StockQuantity INT NOT NULL DEFAULT 50;
+
+-- 20. Rename Category to ProductCategory
+
+EXEC sp_rename
+	'Products.Category',           -- [Table.ColumnName] Old column name to be renamed
+	'ProductCategory',             -- New column name 
+	'COLUMN';                      -- Property of the table
+
+
+-- 21. Insert 5 records into the Products table using standard INSERT INTO queries.
+
+INSERT INTO Products VALUES 
+	(1, 'Bike', 'Mountain', 15000, 100),
+	(2, 'Helmet', 'Mountain', 5000, 300),
+	(3, 'Gloves', 'City', 2000, 2000),
+	(4, 'Socks', 'Long', 500, 5000),
+	(5, 'T-shirt', 'Blue', 300, DEFAULT);
+	
+	
+-- 22. Use SELECT INTO to create a backup table called Products_Backup containing all Products data.
+
+SELECT * INTO Products_Backup
+FROM Products;
+
+
+-- 23. Rename the Products table to Inventory.
+
+EXEC sp_rename 'Products', 'Inventory';
+
+
+-- 24. Alter the Inventory table to change the data type of Price from DECIMAL(10,2) to FLOAT.
+
+ALTER TABLE Inventory
+DROP CONSTRAINT CK__Products__Price__74AE54BC;
+
+ALTER TABLE Inventory
+ALTER COLUMN Price FLOAT;
+
+
+-- 25. Add an IDENTITY column named ProductCode that starts from 1000 and increments by 5.
+
+ALTER TABLE Inventory
+ADD ProductCode INT IDENTITY(1000, 5) NOT NULL;
+
