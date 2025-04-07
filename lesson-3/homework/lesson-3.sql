@@ -268,7 +268,7 @@ CREATE TABLE Customers (
 	CONSTRAINT CHK_Customers_Age CHECK (CustAge >=18));                 -- Added a named CHECK constraint "CHK_Customers_Age" to ensure that the age is greater than or equal to 18.
 
 	
-18. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
+-- 18. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
 
 IF OBJECT_ID('dbo.Items', 'U') IS NOT NULL                                  -- Checks if the table exists.
 	DROP TABLE Items;                                                       -- Drops the table if it exists in the database.
@@ -278,7 +278,7 @@ CREATE TABLE Items (
 	ItemName VARCHAR(50) NOT NULL,
 	ItemCategory VARCHAR(50) NOT NULL);
 	
-19. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
+-- 19. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
 
 IF OBJECT_ID('dbo.OrderDetails', 'U') IS NOT NULL                             -- Checks if the table exists
 	DROP TABLE OrderDetails;                                                  -- Drops the table if it exists in the database.
@@ -291,7 +291,7 @@ CREATE TABLE OrderDetails (
 	CONSTRAINT PK_OrderDetails PRIMARY KEY (OrderID, ProductID));         -- Added a named "PK_OrderDetails" constraint composite primary key on OrderID and ProductID.
 
 
-20. Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
+-- 20. Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
 
 Both functions replace NULL values with alternatives, but with important differences:
 ISNULL Function (SQL Server Specific)
@@ -330,7 +330,7 @@ SELECT
 	COALESCE(CustLastName, 'Unknown') AS CustLastName          -- Returns CustLastName, if it is NULL returns 'Unknown'. 
 FROM Customers;
 
-21. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
+-- 21. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
 
 IF OBJECT_ID('dbo.Employees', 'U') IS NOT NULL                          -- Checks if the table exists.
 	DROP TABLE Employees;                                               -- Drops the table if it exists in the database.
@@ -344,7 +344,7 @@ CREATE TABLE Employees (
 	CONSTRAINT UNQ_Employees_Email UNIQUE (Email),                                                    -- UNIQUE constraint added to Email column ensuring every email is unique in for every employee.
 	CONSTRAINT CHK_TerminationDate CHECK (TerminationDate IS NULL OR TerminationDate > StartDate)     -- CHECK constraint (named) added to make sure the TerminationDate is always later than the start date.
 	);
-22. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
+-- 22. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
 
 -- Let's do this with Products and Categories tables. As Products table already has a FK (CategoryID)
 -- we should drop it first, then we will add it again with ON DELETE CASCADE and ON UPDATE CASCADE
