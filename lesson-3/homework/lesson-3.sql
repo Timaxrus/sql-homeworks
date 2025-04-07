@@ -57,7 +57,11 @@ INSERT INTO Products VALUES    -- Inserting 3 rows into Products
 NULL = NULL returns NULL (not TRUE). NULL values are generally excluded from indexes.
 Default for columns if not specified. NULL values are ignored with aggregation functions.
 
-CREATE TABLE Employees (EmpID INT, Name VARCHAR(50), StartDate DATE, TerminationDate DATE);
+CREATE TABLE Employees (
+	EmpID INT, 
+	Name VARCHAR(50), 
+	StartDate DATE, 
+	TerminationDate DATE);
 
 INSERT INTO Employees VALUES 
 	(1, 'Robert', '2020-10-13', '2023-05-23'),
@@ -179,7 +183,7 @@ FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID);
 
 Feature	             PRIMARY KEY	                   UNIQUE KEY
 ______________________________________________________________________________________________
-Null Values	     | Does not allow NULL values        | Allows one NULL value (per column)
+Null Values	 | Does not allow NULL values        | Allows one NULL value (per column)
 _________________|___________________________________|_________________________________________
 Number per Table | Only one per table	             | Multiple allowed per table
 _________________|___________________________________|_________________________________________
@@ -189,18 +193,151 @@ Clustered Index	 | Creates clustered index by default| Creates non-clustered ind
 _________________|___________________________________|_________________________________________
 Foreign Key      | Can be referenced by foreign keys | Can also be referenced by foreign keys
 _________________|___________________________________|_________________________________________
-Auto-increment	 | Often used with IDENTITY	         |Does not imply auto-increment
+Auto-increment	 | Often used with IDENTITY	     | Does not imply auto-increment
 _________________|___________________________________|_________________________________________
 
 SELECT * FROM Employees
+	
 -- 13. Add a CHECK constraint to the Products table ensuring Price > 0.
+
+ALTER TABLE Products  
+ADD CONSTRAINT CHK_Price_Positive CHECK (Price > 0);     -- Added named CHECK constraint "CHK_Price_Positive" to Price column ensuring it is always greater than 0
+
+	
 -- 14. Modify the Products table to add a column Stock (INT, NOT NULL).
+
+ALTER TABLE Products
+ADD Stock INT NOT NULL
+CONSTRAINT DF_Products_Stock DEFAULT 0;                                                -- All existing rows get this default value.
+
+ALTER TABLE Products
+DROP CONSTRAINT DF_Products_Stock;                                                     -- Then we will drop the default constraint.
+
+
 -- 15. Use the ISNULL function to replace NULL values in a column with a default value.
+
+SELECT 
+	ISNULL(Stock, 0)                                                               -- Replacing the NULL values with 0.
+FROM Products;
+
 -- 16. Describe the purpose and usage of FOREIGN KEY constraints in SQL Server.
+
+Purpose: FOREIGN KEY constraints enforce referential integrity between tables in SQL Server by:
+
+1. Maintaining parent-child relationships between tables
+
+2. Preventing orphaned records (child records without parent)
+
+3. Controlling what happens when referenced data is updated or deleted
+
+4. Documenting the logical relationships in your database schema
+
+Usage: 
+
+1. Insert Rules:
+
+        Child table inserts must match existing parent key values
+
+        Or be NULL (if column allows NULLs)
+
+2. Delete Rules:
+
+        Prevents parent deletion if children exist (default)
+
+        Unless using CASCADE/SET NULL/SET DEFAULT
+
+3. Update Rules:
+
+        Prevents parent key changes if children exist (default)
+
+        Unless using CASCADE
+
+	
 🔴 Hard-Level Tasks (10)
-Write a script to create a Customers table with a CHECK constraint ensuring Age >= 18.
-Create a table with an IDENTITY column starting at 100 and incrementing by 10.
-Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
-Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
-Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
-Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
+	
+-- 17. Write a script to create a Customers table with a CHECK constraint ensuring Age >= 18.
+
+DROP TABLE Customers;                                                  -- Drops the table if it exists in the database.
+
+CREATE TABLE Customers (
+	CustID INT,
+	CustName VARCHAR(50) NOT NULL,
+	CustLastName VARCHAR(50),
+	CustAge INT NOT NULL,
+	CONSTRAINT CHK_Customers_Age CHECK (Age >=18));                 -- Added a named CHECK constraint "CHK_Customers_Age" to ensure that the age is greater than or equal to 18.
+
+
+18. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
+
+DROP TABLE Items;                                                       -- Drops the table if it exists in the database.
+
+CREATE TABLE Items (
+	ItemID INT PRIMARY KEY IDENTITY (100, 10),                      -- ItemID is a primary key and it has identity with seed 100 and increment value equal to 10.
+	ItemName VARHCHAR(50) NOT NULL,
+	ItemCategory VARCHAR(50) NOT NULL);
+	
+19. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
+
+DROP TABLE OrderDetails;                                                  -- Drops the table if it exists in the database.
+
+CREATE TABLE OrderDetails (
+	OrderID INT NOT NULL,
+	ProductID INT NOT NULL,
+	Quantity INT NOT NULL,
+	UnitPrice DECIMAL(10, 2) NOT NULL,
+	CONSTRAINT PK_OrderDetails PRIMARY KEY (OrderID, ProductID)         -- Added a named "PK_OrderDetails" constraint composite primary key on OrderID and ProductID.
+
+
+20. Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
+
+Both functions replace NULL values with alternatives, but with important differences:
+ISNULL Function (SQL Server Specific)
+
+Syntax: ISNULL(expression, replacement_value)
+Key Characteristics:
+
+    SQL Server proprietary (not ANSI standard)
+
+    Only accepts 2 parameters
+
+    Returns data type of first argument
+
+Example:
+	
+SELECT 
+	ISNULL(UnitPrice, 0) AS UnitPrice                               -- If there is a NULL value in UnitPrice column, it will be replaced with 0.
+FROM OrderDetails;
+
+COALESCE Function (ANSI Standard)
+
+Syntax: COALESCE(expression1, expression2, ..., expressionN)
+Key Characteristics:
+
+    ANSI standard (works across databases)
+
+    Accepts multiple parameters
+
+    Returns first non-NULL value in list
+
+    Returns data type with highest precedence
+
+Example:
+
+SELECT
+	COALESCE(CustLastName, 'Unknown') AS CustLastName          -- Returns CustLastName, if it is NULL returns 'Unknown'. 
+FROM Customers;
+
+21. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
+
+DROP TABLE Employees;                                               -- Drops the table if it exists in the database.
+
+CREATE TABLE Employees (
+	EmpID INT PRIMARY KEY IDENTITY (1, 1),                       -- EmpID column with primary key and identity constraint starting from 1 and auto-incrementing by 1.
+	Name NVARCHAR(50) NOT NULL,
+	Email NVARCHAR(50) NOT NULL,
+	StartDate DATE NOT NULL, 
+	TerminationDate DATE,
+	CONSTRAINT UNQ_Employees_Email UNIQUE (Email),                                                    -- UNIQUE constraint added to Email column ensuring every email is unique in for every employee.
+	CONSTRAINT CHK_TerminationDate CHECK (TerminationDate IS NULL OR TerminationDate > StartDate)     -- CHECK constraint (named) added to make sure the TerminationDate is always later than the start date.
+	);
+22. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
