@@ -40,7 +40,7 @@ CREATE TABLE Products
 	(ProductID INT PRIMARY KEY, 
 	ProductName VARCHAR(50), 
 	Price DECIMAL(10,2));
-
+	
 --4. Insert three records into the Products table using INSERT INTO.
 
 TRUNCATE TABLE Products; -- Truncates table Products before inserting data
@@ -62,7 +62,7 @@ CREATE TABLE Employees (
 	Name VARCHAR(50), 
 	StartDate DATE, 
 	TerminationDate DATE);
-
+	
 INSERT INTO Employees VALUES 
 	(1, 'Robert', '2020-10-13', '2023-05-23'),
 	(2, 'Lucy', '2024-12-04', NULL),
@@ -123,7 +123,7 @@ WHERE YEAR(TerminationDate) = '2023';     -- Filter out TerminationDate column e
 CREATE TABLE Categories (
 	CategoryID INT PRIMARY KEY,
 	CategoryName VARCHAR(50) UNIQUE)  -- Simple column-level UNIQUE constraint
-
+	
 
 -- 9. Explain the purpose of the IDENTITY column in SQL Server.
 
@@ -162,7 +162,7 @@ WITH (
     ROWTERMINATOR = '\n',    -- Linux line ending
     TABLOCK                -- Improves performance
     );
-
+	
 	SELECT * FROM Products         -- To confirm that all the rows imported correctly
 
 
@@ -217,7 +217,7 @@ DROP CONSTRAINT DF_Products_Stock;                                              
 -- 15. Use the ISNULL function to replace NULL values in a column with a default value.
 
 SELECT 
-	ISNULL(Stock, 0)                                                               -- Replacing the NULL values with 0.
+	ISNULL(Stock, 0) AS Stock                                                           -- Replacing the NULL values with 0.
 FROM Products;
 
 -- 16. Describe the purpose and usage of FOREIGN KEY constraints in SQL Server.
@@ -253,39 +253,42 @@ Usage:
         Unless using CASCADE
 
 	
-🔴 Hard-Level Tasks (10)
+-- Hard-Level Tasks (10)
 	
 -- 17. Write a script to create a Customers table with a CHECK constraint ensuring Age >= 18.
 
-DROP TABLE Customers;                                                  -- Drops the table if it exists in the database.
+IF OBJECT_ID('dbo.Customers', 'U') IS NOT NULL                                -- Check if table Customers exist in the database.
+    DROP TABLE dbo.Customers;                                                 -- Drops the table if it exists in the database.
 
 CREATE TABLE Customers (
 	CustID INT,
 	CustName VARCHAR(50) NOT NULL,
 	CustLastName VARCHAR(50),
 	CustAge INT NOT NULL,
-	CONSTRAINT CHK_Customers_Age CHECK (Age >=18));                 -- Added a named CHECK constraint "CHK_Customers_Age" to ensure that the age is greater than or equal to 18.
+	CONSTRAINT CHK_Customers_Age CHECK (CustAge >=18));                 -- Added a named CHECK constraint "CHK_Customers_Age" to ensure that the age is greater than or equal to 18.
 
-
+	
 18. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
 
-DROP TABLE Items;                                                       -- Drops the table if it exists in the database.
+IF OBJECT_ID('dbo.Items', 'U') IS NOT NULL                                  -- Checks if the table exists.
+	DROP TABLE Items;                                                       -- Drops the table if it exists in the database.
 
 CREATE TABLE Items (
-	ItemID INT PRIMARY KEY IDENTITY (100, 10),                      -- ItemID is a primary key and it has identity with seed 100 and increment value equal to 10.
-	ItemName VARHCHAR(50) NOT NULL,
+	ItemID INT PRIMARY KEY IDENTITY (100, 10),                               -- ItemID is a primary key and it has identity with seed 100 and increment value equal to 10.
+	ItemName VARCHAR(50) NOT NULL,
 	ItemCategory VARCHAR(50) NOT NULL);
 	
 19. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
 
-DROP TABLE OrderDetails;                                                  -- Drops the table if it exists in the database.
+IF OBJECT_ID('dbo.OrderDetails', 'U') IS NOT NULL                             -- Checks if the table exists
+	DROP TABLE OrderDetails;                                                  -- Drops the table if it exists in the database.
 
 CREATE TABLE OrderDetails (
 	OrderID INT NOT NULL,
 	ProductID INT NOT NULL,
 	Quantity INT NOT NULL,
 	UnitPrice DECIMAL(10, 2) NOT NULL,
-	CONSTRAINT PK_OrderDetails PRIMARY KEY (OrderID, ProductID)         -- Added a named "PK_OrderDetails" constraint composite primary key on OrderID and ProductID.
+	CONSTRAINT PK_OrderDetails PRIMARY KEY (OrderID, ProductID));         -- Added a named "PK_OrderDetails" constraint composite primary key on OrderID and ProductID.
 
 
 20. Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
@@ -329,7 +332,8 @@ FROM Customers;
 
 21. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
 
-DROP TABLE Employees;                                               -- Drops the table if it exists in the database.
+IF OBJECT_ID('dbo.Employees', 'U') IS NOT NULL                          -- Checks if the table exists.
+	DROP TABLE Employees;                                               -- Drops the table if it exists in the database.
 
 CREATE TABLE Employees (
 	EmpID INT PRIMARY KEY IDENTITY (1, 1),                       -- EmpID column with primary key and identity constraint starting from 1 and auto-incrementing by 1.
@@ -341,3 +345,16 @@ CREATE TABLE Employees (
 	CONSTRAINT CHK_TerminationDate CHECK (TerminationDate IS NULL OR TerminationDate > StartDate)     -- CHECK constraint (named) added to make sure the TerminationDate is always later than the start date.
 	);
 22. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
+
+-- Let's do this with Products and Categories tables. As Products table already has a FK (CategoryID)
+-- we should drop it first, then we will add it again with ON DELETE CASCADE and ON UPDATE CASCADE
+
+ALTER TABLE Products
+DROP CONSTRAINT FK_Products_Categories;                             -- Drop constraint first that dependant on CategoryID
+
+ALTER TABLE Products
+ADD CONSTRAINT FK_Products_Category
+    FOREIGN KEY (CategoryID)
+    REFERENCES Categories(CategoryID)
+    ON DELETE CASCADE                                               -- Here we mention that if parent data deleted the related child data should also be deleted
+    ON UPDATE CASCADE;                                              -- If parent data updated, child data should also be updated.
