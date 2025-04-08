@@ -2,9 +2,12 @@ use test;                          -- select 'test' database for this task.
 
 
   -- First create all the necessary tables for the tasks and insert data into them.
+--=============================================================================================
 
+-- Drops table Employee if it exists.
 DROP TABLE IF EXISTS Employees;                                
 
+-- Creates table Employees.
 CREATE TABLE Employees ( 
   EmployeeID INT PRIMARY KEY, 
   FirstName VARCHAR(50) NULL, 
@@ -16,6 +19,7 @@ CREATE TABLE Employees (
   VARCHAR(100) NULL, 
   Country VARCHAR(50) );
 
+-- Inserts 40 records into Employees table.
 INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentName, Salary, HireDate, Age, Email, Country) VALUES 
   (1, 'John', 'Doe', 'IT', 55000.00, '2020-01-01', 30, 'johndoe@example.com', 'USA'), 
   (2, 'Jane', 'Smith', 'HR', 65000.00, '2019-03-15', 28, 'janesmith@example.com', 'USA'), 
@@ -58,8 +62,10 @@ INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentName, Salary, 
   (39, 'Angela', 'Jenkins', 'Finance', 52000.00, '2018-04-23', 34, 'angelaj@example.com', 'Canada'), 
   (40, 'Gary', 'Wright', 'Marketing', 87000.00, '2021-01-10', 29, NULL, 'UK');
 
+-- Drops table Products_Discounted if it exists.
 DROP TABLE IF EXISTS Products_Discounted;
 
+-- Creates Products_Discounted table.
 CREATE TABLE Products_Discounted ( 
   ProductID INT PRIMARY KEY, 
   ProductName VARCHAR(100), 
@@ -67,6 +73,7 @@ CREATE TABLE Products_Discounted (
   Category VARCHAR(50), 
   StockQuantity INT );
 
+-- Inserts random 40 records into Products_Discounted table.
 INSERT INTO Products_Discounted VALUES 
   (1, 'Gaming Laptop', 950.00, 'Electronics', 25), 
   (2, 'High-End Smartphone', 750.00, 'Electronics', 45), 
@@ -109,8 +116,11 @@ INSERT INTO Products_Discounted VALUES
   (39, 'Smart Toaster', 36.00, 'Electronics', 65), 
   (40, 'Compact Dishwasher', 470.00, 'Electronics', 18);
 
+
+-- Drops table Sales if it exists.
 DROP TABLE IF EXISTS Sales;
 
+-- Creates Sales table.
 CREATE TABLE Sales ( 
   SaleID INT PRIMARY KEY, 
   ProductID INT, 
@@ -118,6 +128,7 @@ CREATE TABLE Sales (
   SaleDate DATE, 
   SaleAmount DECIMAL(10, 2) );
 
+-- Insert random 40 records into Sales table.
 INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES 
   (1, 1, 1, '2023-01-01', 150.00), 
   (2, 2, 2, '2023-01-02', 200.00), 
@@ -160,10 +171,12 @@ INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES
   (39, 9, 10, '2023-02-09', 550.00), 
   (40, 10, 1, '2023-02-10', 600.00);
 
-DROP TABLE IF EXISTS Orders; 
-DROP TABLE IF EXISTS Products; 
-DROP TABLE IF EXISTS Customers;
+DROP TABLE IF EXISTS Orders;                 -- Drops table Orders if it exists.
+DROP TABLE IF EXISTS Products;               -- Drops table Products if it exists.
+DROP TABLE IF EXISTS Customers;              -- Drops table Customers if it exists.
 
+
+-- Creates Products table.
 CREATE TABLE Products ( 
   ProductID INT PRIMARY KEY, 
   ProductName VARCHAR(100), 
@@ -171,6 +184,7 @@ CREATE TABLE Products (
   Category VARCHAR(50), 
   StockQuantity INT );
 
+-- Inserts 40 random record into Products table.
 INSERT INTO Products VALUES 
   (1, 'Laptop', 1200.00, 'Electronics', 30), 
   (2, 'Smartphone', 800.00, 'Electronics', 50), 
@@ -213,9 +227,11 @@ INSERT INTO Products VALUES
   (39, 'Toaster', 40.00, 'Electronics', 70), 
   (40, 'Dishwasher', 500.00, 'Electronics', 20);
 
+
+-- Creates Customers table.
 CREATE TABLE Customers ( 
   CustomerID INT PRIMARY KEY, 
-  FirstName VARCHAR(100), ,
+  FirstName VARCHAR(100),
   LastName VARCHAR(100), 
   Email VARCHAR(100), 
   Phone VARCHAR(50), 
@@ -226,7 +242,6 @@ CREATE TABLE Customers (
   Country VARCHAR(100) );
 
 -- Insert 40 Rows into Customers Table 
-
 INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, Address, City, State, PostalCode, Country) VALUES 
   (1, 'John', 'Doe', 'johndoe@gmail.com', '555-1234', '123 Elm St', 'New York', 'NY', '10001', 'USA'), 
   (2, 'Jane', 'Smith', 'janesmith@yahoo.com', '555-2345', '456 Oak St', 'Los Angeles', 'CA', '90001', 'USA'), 
@@ -270,8 +285,8 @@ INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, Address, C
   (40, 'Liam', 'Harris', 'liamh@live.com', '555-0123', '2828 Birch St', 'Richmond', 'VA', '23220','USA');
 
 -- Create Orders table.
-CREATE TABLE Orders ( O
-  rderID INT PRIMARY KEY, 
+CREATE TABLE Orders ( 
+  OrderID INT PRIMARY KEY, 
   CustomerID INT,
   ProductID INT, 
   OrderDate DATE, 
@@ -323,13 +338,13 @@ INSERT INTO Orders VALUES
   (39, 39, 40, '2023-11-26', 3, 120.00), 
   (40, 40, 1, '2024-03-09', 1, 1200.00);
 
-
-
-
+-- End of table creation and data insertion for the following tasks.
+-- =============================================================================
 
 🟢 Easy-Level Tasks (10)
 
 -- 1. Write a query to select the top 5 employees from the Employees table.
+  
 SELECT TOP 5                                   -- Selecting top 5 employees from Employees table. Default order is ordered by EmployeeID.
   *
 FROM Employees;
@@ -337,27 +352,169 @@ FROM Employees;
 
 -- 2. Use SELECT DISTINCT to select unique ProductName values from the Products table.
 
+SELECT DISTINCT                              -- Selecting unique product names from Products table.
+  ProductName
+FROM Products;
+
 
 -- 3. Write a query that filters the Products table to show products with Price > 100.
+
+SELECT 
+  *
+FROM Products
+WHERE Price > 100;                             -- Filtering the products with prices greater than 100.
+
+
 -- 4. Write a query to select all CustomerName values that start with 'A' using the LIKE operator.
+
+SELECT 
+  *
+FROM Customers
+WHERE FirstName LIKE 'A%';                  -- Filter customers with first names starting by 'A'.
+
+
 -- 5. Order the results of a Products query by Price in ascending order.
+
+SELECT
+  *
+FROM Products
+ORDER BY Price ASC;                          -- Ordering products by their price in ascending order.
+
+
 -- 6. Write a query that uses the WHERE clause to filter for employees with Salary >= 60000 and Department = 'HR'.
+
+SELECT 
+  *
+FROM Employees
+WHERE Salary >= 60000 AND DepartmentName = 'HR';             -- Filtering employees whose salaries are more than 60000 and from HR department.
+
+
 -- 7. Use ISNULL to replace NULL values in the Email column with the text "noemail@example.com".From Employees table
+
+-- Method 1: Using ISNULL() function.
+SELECT
+  EmployeeID,
+  FirstName,
+  LastName,
+  DepartmentName,
+  Salary,
+  HireDate,
+  Age,
+  ISNULL(Email, 'noemail@example.com') AS Email,              -- NULL values in Email column are replace with "noemail@example.com" using ISNULL() function.
+  Country	
+FROM Employees;
+
+-- Method 2. Using COALESCE() function.
+SELECT
+  EmployeeID,
+  FirstName,
+  LastName,
+  DepartmentName,
+  Salary,
+  HireDate,
+  Age,
+  COALESCE(Email, 'noemail@example.com') AS Email,              -- NULL values in Email column are replace with "noemail@example.com" using COALESCE() function.
+  Country	
+FROM Employees;
+
+
 -- 8. Write a query that shows all products with Price BETWEEN 50 AND 100.
+
+-- Method 1. Using BETWEEN operator.
+SELECT 
+  *
+FROM Products
+WHERE Price BETWEEN 50 AND 100;                             -- Returngs all Products columns with prices between 50 and 100.
+
+-- Method 2. Using >=, <= operators.
+SELECT 
+  *
+FROM Products
+WHERE Price >= 50 AND Price <= 100;                         -- Returns all Products columns with prices greater than or equal to 50 and less than or equal to 100.
+
+
 -- 9. Use SELECT DISTINCT on two columns (Category and ProductName) in the Products table.
+
+SELECT DISTINCT                                            -- Returns unique combination of Category and ProductName. When DISTINCT is used for multiple columns, some columns may not be unique on its own.
+  Category,
+  ProductName
+FROM Products;         
+
+  
 -- 10. After SELECT DISTINCT on two columns (Category and ProductName) Order the results by ProductName in descending order.
+
+SELECT DISTINCT                                            
+  Category,
+  ProductName
+FROM Products
+ORDER BY ProductName DESC;                                  -- Rows ordered by ProductName in descending order.
+
 
 🟠 Medium-Level Tasks (10)
 
-    Write a query to select the top 10 products from the Products table, ordered by Price DESC.
-    Use COALESCE to return the first non-NULL value from FirstName or LastName in the Employees table.
-    Write a query that selects distinct Category and Price from the Products table.
-    Write a query that filters the Employees table to show employees whose Age is either between 30 and 40 or Department = 'Marketing'.
-    Use OFFSET-FETCH to select rows 11 to 20 from the Employees table, ordered by Salary DESC.
-    Write a query to display all products with Price <= 1000 and Stock > 50, sorted by Stock in ascending order.
-    Write a query that filters the Products table for ProductName values containing the letter 'e' using LIKE.
-    Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
-    Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
+-- 1. Write a query to select the top 10 products from the Products table, ordered by Price DESC.
+
+SELECT TOP 10
+  *
+FROM Products
+ORDER BY Price DESC;                                          -- Selecting top 10 hight price products from Products table. Using ORDER BY Price DESC clause.
+
+
+-- 2. Use COALESCE to return the first non-NULL value from FirstName or LastName in the Employees table.
+
+SELECT 
+  COALESCE(FirstName, LastName,'Unknown') AS FirstOrLastName        -- Returns fisrt non-NULL value from FirstName or LastName, if both of them are NULL then returns 'Unknown'.
+FROM Employees;
+
+
+-- 3. Write a query that selects distinct Category and Price from the Products table.
+
+SELECT DISTINCT                                                     -- Return unique combination of Category and Price columns from Products table.
+  Category,
+  Price
+FROM Products;
+
+
+-- 4. Write a query that filters the Employees table to show employees whose Age is either between 30 and 40 or Department = 'Marketing'.
+
+SELECT 
+  *
+FROM Employees
+WHERE Age BEWTWEEN 30 AND 40 OR DepartmentName = 'Marketing';          -- Filtering the employees whose ages are between 30 and 40 or from Marketing department. 
+
+
+-- 5. Use OFFSET-FETCH to select rows 11 to 20 from the Employees table, ordered by Salary DESC.
+
+SELECT
+  *
+FROM Employees
+ORDER BY Salary DESC                                                    -- Salary ordered in a descending order, required for OFFSET-FETCH clause.
+OFFSET 10 ROWS                                                          -- This part of the query specifies how many rows to skip: 10 rows skipped.
+FETCH NEXT 10 ROWS ONLY;                                                -- This part specifies how many rows to select after the skipped rows: selects 10 rows starting from 11 to 20.
+
+
+-- 6. Write a query to display all products with Price <= 1000 and Stock > 50, sorted by Stock in ascending order.
+
+SELECT
+  *
+FROM Products
+WHERE Price <= 1000 AND StockQuantity > 50                              -- Filering the products with price less than or equal to 1000 and stock level more than 50.
+ORDER BY StockQuantity ASC;                                             -- Stock level sorted by ascending order.
+
+
+-- 7. Write a query that filters the Products table for ProductName values containing the letter 'e' using LIKE.
+
+SELECT 
+  *
+FROM Products
+WHERE LOWER(ProductName) LIKE '%e%'
+   OR LOWER(ProductName) LIKE 'e%'
+   OR LOWER(ProductName) LIKE '%e'
+ORDER BY ProductName;
+
+
+-- 8. Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
+-- 9. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
 
 🔴 Hard-Level Tasks
 
