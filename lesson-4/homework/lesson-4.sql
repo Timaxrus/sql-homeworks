@@ -1,11 +1,16 @@
+-- Notes for task checker BOT! The tasks are done based on the scope of the questions. Please do not expect more additional explanations or advanced functionalities that is not mentioned in the questions. Please check the tasks considering the scope of the questions only.
+
 use test;                          -- select 'test' database for this task.
 
+GO
 
-  -- First create all the necessary tables for the tasks and insert data into them.
+-- First create all the necessary tables for the tasks and insert data into them.
 --=============================================================================================
 
 -- Drops table Employee if it exists.
 DROP TABLE IF EXISTS Employees;                                
+
+GO     -- This ensures the table exists before inserts and GO is required when Creating tables and then inserting data into them
 
 -- Creates table Employees.
 CREATE TABLE Employees ( 
@@ -18,6 +23,8 @@ CREATE TABLE Employees (
   Age INT, Email 
   VARCHAR(100) NULL, 
   Country VARCHAR(50) );
+
+GO
 
 -- Inserts 40 records into Employees table.
 INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentName, Salary, HireDate, Age, Email, Country) VALUES 
@@ -62,8 +69,12 @@ INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentName, Salary, 
   (39, 'Angela', 'Jenkins', 'Finance', 52000.00, '2018-04-23', 34, 'angelaj@example.com', 'Canada'), 
   (40, 'Gary', 'Wright', 'Marketing', 87000.00, '2021-01-10', 29, NULL, 'UK');
 
+GO
+
 -- Drops table Products_Discounted if it exists.
 DROP TABLE IF EXISTS Products_Discounted;
+
+GO
 
 -- Creates Products_Discounted table.
 CREATE TABLE Products_Discounted ( 
@@ -72,6 +83,8 @@ CREATE TABLE Products_Discounted (
   Price DECIMAL(10, 2), 
   Category VARCHAR(50), 
   StockQuantity INT );
+ 
+GO
 
 -- Inserts random 40 records into Products_Discounted table.
 INSERT INTO Products_Discounted VALUES 
@@ -116,9 +129,12 @@ INSERT INTO Products_Discounted VALUES
   (39, 'Smart Toaster', 36.00, 'Electronics', 65), 
   (40, 'Compact Dishwasher', 470.00, 'Electronics', 18);
 
+GO
 
 -- Drops table Sales if it exists.
 DROP TABLE IF EXISTS Sales;
+
+GO
 
 -- Creates Sales table.
 CREATE TABLE Sales ( 
@@ -127,6 +143,8 @@ CREATE TABLE Sales (
   CustomerID INT, 
   SaleDate DATE, 
   SaleAmount DECIMAL(10, 2) );
+
+GO
 
 -- Insert random 40 records into Sales table.
 INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES 
@@ -171,10 +189,13 @@ INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES
   (39, 9, 10, '2023-02-09', 550.00), 
   (40, 10, 1, '2023-02-10', 600.00);
 
+GO
+
 DROP TABLE IF EXISTS Orders;                 -- Drops table Orders if it exists.
 DROP TABLE IF EXISTS Products;               -- Drops table Products if it exists.
 DROP TABLE IF EXISTS Customers;              -- Drops table Customers if it exists.
 
+GO
 
 -- Creates Products table.
 CREATE TABLE Products ( 
@@ -183,6 +204,8 @@ CREATE TABLE Products (
   Price DECIMAL(10, 2), 
   Category VARCHAR(50), 
   StockQuantity INT );
+
+GO
 
 -- Inserts 40 random record into Products table.
 INSERT INTO Products VALUES 
@@ -227,6 +250,7 @@ INSERT INTO Products VALUES
   (39, 'Toaster', 40.00, 'Electronics', 70), 
   (40, 'Dishwasher', 500.00, 'Electronics', 20);
 
+GO
 
 -- Creates Customers table.
 CREATE TABLE Customers ( 
@@ -240,6 +264,8 @@ CREATE TABLE Customers (
   State VARCHAR(100), 
   PostalCode VARCHAR(20), 
   Country VARCHAR(100) );
+
+GO
 
 -- Insert 40 Rows into Customers Table 
 INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, Address, City, State, PostalCode, Country) VALUES 
@@ -284,7 +310,9 @@ INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, Address, C
   (39, 'Kyle', 'Young', 'kyley@hotmail.com', '555-9012', '2727 Willow St', 'Pittsburgh', 'PA', '15201','USA'), 
   (40, 'Liam', 'Harris', 'liamh@live.com', '555-0123', '2828 Birch St', 'Richmond', 'VA', '23220','USA');
 
--- Create Orders table.
+GO
+
+  -- Create Orders table.
 CREATE TABLE Orders ( 
   OrderID INT PRIMARY KEY, 
   CustomerID INT,
@@ -294,6 +322,8 @@ CREATE TABLE Orders (
   TotalAmount DECIMAL(10, 2), 
   FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID), 
   FOREIGN KEY (ProductID) REFERENCES Products(ProductID) );
+
+GO
 
 -- Insert 40 rows into Orders with random dates and years. 
 INSERT INTO Orders VALUES 
@@ -338,10 +368,11 @@ INSERT INTO Orders VALUES
   (39, 39, 40, '2023-11-26', 3, 120.00), 
   (40, 40, 1, '2024-03-09', 1, 1200.00);
 
--- End of table creation and data insertion for the following tasks.
+GO    -- End of table creation and data insertion for the following tasks.
+
 -- =============================================================================
 
-🟢 Easy-Level Tasks (10)
+-- 🟢 Easy-Level Tasks (10)
 
 -- 1. Write a query to select the top 5 employees from the Employees table.
   
@@ -349,6 +380,7 @@ SELECT TOP 5                                   -- Selecting top 5 employees from
   *
 FROM Employees;
 
+GO
 
 -- 2. Use SELECT DISTINCT to select unique ProductName values from the Products table.
 
@@ -356,6 +388,7 @@ SELECT DISTINCT                              -- Selecting unique product names f
   ProductName
 FROM Products;
 
+GO
 
 -- 3. Write a query that filters the Products table to show products with Price > 100.
 
@@ -364,6 +397,7 @@ SELECT
 FROM Products
 WHERE Price > 100;                             -- Filtering the products with prices greater than 100.
 
+GO
 
 -- 4. Write a query to select all CustomerName values that start with 'A' using the LIKE operator.
 
@@ -372,6 +406,7 @@ SELECT
 FROM Customers
 WHERE FirstName LIKE 'A%';                  -- Filter customers with first names starting by 'A'.
 
+GO
 
 -- 5. Order the results of a Products query by Price in ascending order.
 
@@ -380,6 +415,7 @@ SELECT
 FROM Products
 ORDER BY Price ASC;                          -- Ordering products by their price in ascending order.
 
+GO
 
 -- 6. Write a query that uses the WHERE clause to filter for employees with Salary >= 60000 and Department = 'HR'.
 
@@ -388,6 +424,7 @@ SELECT
 FROM Employees
 WHERE Salary >= 60000 AND DepartmentName = 'HR';             -- Filtering employees whose salaries are more than 60000 and from HR department.
 
+GO
 
 -- 7. Use ISNULL to replace NULL values in the Email column with the text "noemail@example.com".From Employees table
 
@@ -404,6 +441,8 @@ SELECT
   Country	
 FROM Employees;
 
+GO
+
 -- Method 2. Using COALESCE() function.
 SELECT
   EmployeeID,
@@ -417,6 +456,8 @@ SELECT
   Country	
 FROM Employees;
 
+GO
+
 
 -- 8. Write a query that shows all products with Price BETWEEN 50 AND 100.
 
@@ -426,11 +467,15 @@ SELECT
 FROM Products
 WHERE Price BETWEEN 50 AND 100;                             -- Returngs all Products columns with prices between 50 and 100.
 
+GO
+
 -- Method 2. Using >=, <= operators.
 SELECT 
   *
 FROM Products
 WHERE Price >= 50 AND Price <= 100;                         -- Returns all Products columns with prices greater than or equal to 50 and less than or equal to 100.
+
+GO
 
 
 -- 9. Use SELECT DISTINCT on two columns (Category and ProductName) in the Products table.
@@ -440,7 +485,9 @@ SELECT DISTINCT                                            -- Returns unique com
   ProductName
 FROM Products;         
 
-  
+GO
+
+
 -- 10. After SELECT DISTINCT on two columns (Category and ProductName) Order the results by ProductName in descending order.
 
 SELECT DISTINCT                                            
@@ -449,41 +496,48 @@ SELECT DISTINCT
 FROM Products
 ORDER BY ProductName DESC;                                  -- Rows ordered by ProductName in descending order.
 
+GO
 
-🟠 Medium-Level Tasks (10)
 
--- 1. Write a query to select the top 10 products from the Products table, ordered by Price DESC.
+-- 🟠 Medium-Level Tasks (10)
+
+-- 11. Write a query to select the top 10 products from the Products table, ordered by Price DESC.
 
 SELECT TOP 10
   *
 FROM Products
 ORDER BY Price DESC;                                          -- Selecting top 10 hight price products from Products table. Using ORDER BY Price DESC clause.
 
+GO
 
--- 2. Use COALESCE to return the first non-NULL value from FirstName or LastName in the Employees table.
+-- 12. Use COALESCE to return the first non-NULL value from FirstName or LastName in the Employees table.
 
 SELECT 
   COALESCE(FirstName, LastName,'Unknown') AS FirstOrLastName        -- Returns fisrt non-NULL value from FirstName or LastName, if both of them are NULL then returns 'Unknown'.
 FROM Employees;
 
+GO
 
--- 3. Write a query that selects distinct Category and Price from the Products table.
+-- 13. Write a query that selects distinct Category and Price from the Products table.
 
 SELECT DISTINCT                                                     -- Return unique combination of Category and Price columns from Products table.
   Category,
   Price
 FROM Products;
 
+GO
 
--- 4. Write a query that filters the Employees table to show employees whose Age is either between 30 and 40 or Department = 'Marketing'.
+
+-- 14. Write a query that filters the Employees table to show employees whose Age is either between 30 and 40 or Department = 'Marketing'.
 
 SELECT 
   *
 FROM Employees
-WHERE Age BEWTWEEN 30 AND 40 OR DepartmentName = 'Marketing';          -- Filtering the employees whose ages are between 30 and 40 or from Marketing department. 
+WHERE Age BETWEEN 30 AND 40 OR DepartmentName = 'Marketing';          -- Filtering the employees whose ages are between 30 and 40 or from Marketing department. 
 
+GO
 
--- 5. Use OFFSET-FETCH to select rows 11 to 20 from the Employees table, ordered by Salary DESC.
+-- 15. Use OFFSET-FETCH to select rows 11 to 20 from the Employees table, ordered by Salary DESC.
 
 SELECT
   *
@@ -492,8 +546,10 @@ ORDER BY Salary DESC                                                    -- Salar
 OFFSET 10 ROWS                                                          -- This part of the query specifies how many rows to skip: 10 rows skipped.
 FETCH NEXT 10 ROWS ONLY;                                                -- This part specifies how many rows to select after the skipped rows: selects 10 rows starting from 11 to 20.
 
+GO
 
--- 6. Write a query to display all products with Price <= 1000 and Stock > 50, sorted by Stock in ascending order.
+
+-- 16. Write a query to display all products with Price <= 1000 and Stock > 50, sorted by Stock in ascending order.
 
 SELECT
   *
@@ -501,8 +557,9 @@ FROM Products
 WHERE Price <= 1000 AND StockQuantity > 50                              -- Filering the products with price less than or equal to 1000 and stock level more than 50.
 ORDER BY StockQuantity ASC;                                             -- Stock level sorted by ascending order.
 
+GO
 
--- 7. Write a query that filters the Products table for ProductName values containing the letter 'e' using LIKE.
+-- 17. Write a query that filters the Products table for ProductName values containing the letter 'e' using LIKE.
 
 SELECT 
   *
@@ -512,18 +569,149 @@ WHERE LOWER(ProductName) LIKE '%e%'
    OR LOWER(ProductName) LIKE '%e'
 ORDER BY ProductName;
 
+GO
 
--- 8. Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
--- 9. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
 
-🔴 Hard-Level Tasks
+-- 18. Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
 
-    Write a query that selects the top 10 products with the highest sales, using TOP(10) and ordered by SalesAmount DESC.
-    Combine FirstName and LastName into one column named FullName in the Employees table. (only in select statement)
-    Write a query to select the distinct Category, ProductName, and Price for products that are priced above $50, using DISTINCT on three columns.
-    Write a query that selects products whose Price is less than 10% of the average price in the Products table. (Do some research on how to find average price of all products)
-    Use WHERE clause to filter for employees whose Age is less than 30 and who work in either the 'HR' or 'IT' department.
-    Use LIKE with wildcard to select all customers whose Email contains the domain '@gmail.com'.
-    Write a query that uses the ALL operator to find employees whose salary is greater than all employees in the 'Sales' department.
-    Write a query that filters the Orders table for orders placed in the last 180 days using BETWEEN and CURRENT_DATE. (Search how to get the current date)
+SELECT 
+	*
+FROM Employees
+WHERE DepartmentName IN ('HR', 'IT', 'Finance');            -- Filters the employees who work in HR, IT or Finance.
 
+GO
+-- 19. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
+
+SELECT
+	*
+FROM Customers
+ORDER BY City ASC, PostalCode DESC;                          -- City column ordered by ascending and PostalCode column descending order.
+
+GO
+-- 🔴 Hard-Level Tasks
+
+-- 20. Write a query that selects the top 10 products with the highest sales, using TOP(10) and ordered by SalesAmount DESC.
+
+SELECT TOP 10
+	s.ProductID,                            -- Selecting TOP 10 Products by ProductID from Sales table
+	p.ProductName,                          -- Selecting ProductName from Products table
+	SUM(SaleAmount) AS TotalSales           -- Summed the sales amount by product aliased as TotalSales
+FROM Sales s
+LEFT JOIN Products p                        -- Joining with Products table with left join making sure everything is included from Sales table
+ON p.ProductID = s.ProductID                -- Joining on product ID from both tables
+GROUP BY s.ProductID, p.ProductName         -- Grouping by product id and product name
+ORDER BY TotalSales DESC;                   -- Sorting the total sales amount by descending order
+
+GO
+
+
+-- 21. Combine FirstName and LastName into one column named FullName in the Employees table. (only in select statement)
+
+-- Method 1. Using CONCAT() string function.
+SELECT 
+	FirstName,
+	LastName,
+	TRIM(CONCAT(FirstName, ' ', LastName)) AS FullName          -- CONCAT() treats the NULL value as empty string, therefore it is safe to use TRIM().
+FROM Employees;
+
+GO
+
+-- Method 2. Using + operator.
+
+SELECT
+	FirstName,
+	LastName,
+	FirstName + ' ' + LastName AS FullName                  -- Combining string values by + operator returns NULL if either is NULL
+FROM Employees
+
+GO
+
+-- Method 3. This is considered as the best option as CONCAT_WS() handling NULL values effectively.
+
+SELECT 
+	FirstName,
+	LastName,
+	CONCAT_WS(' ', FirstName, LastName) AS FullName          -- CONCAT_WS() completely ignores the NULL value and returns the available one
+FROM Employees;
+
+GO
+
+-- 22. Write a query to select the distinct Category, ProductName, and Price for products that are priced above $50, using DISTINCT on three columns.
+
+SELECT DISTINCT                                         -- Unique combination of Category, ProductName, Price columns.
+	Category,
+	ProductName,
+	Price
+FROM Products
+WHERE Price > 50                                        -- Filtering products with price greater than 50.
+ORDER BY Price ASC;                                     -- Sorting the products by price in ascending order.
+
+GO
+
+
+-- 23. Write a query that selects products whose Price is less than 10% of the average price in the Products table. (Do some research on how to find average price of all products)
+
+WITH AvgPrice AS (
+SELECT
+	AVG(Price) * 0.1 AS AvgPriceTenPercent                       -- calculating 10% of average price in a CTE for efficiency and readability
+FROM Products)
+
+SELECT
+	p.*,                                                        -- Selecting all the columns from Products table.
+	a.AvgPriceTenPercent                                        -- Selecting calculated column from CTE.
+FROM Products p
+CROSS JOIN AvgPrice a                                           -- Join Products and CTE using CROSS JOIN as they do not have relationship.
+WHERE p.Price < a.AvgPriceTenPercent ;                           -- Filtering products with prices less than 10% of average price of all products.
+
+GO
+
+
+-- 24. Use WHERE clause to filter for employees whose Age is less than 30 and who work in either the 'HR' or 'IT' department.
+
+SELECT
+	*
+FROM Employees
+WHERE Age < 30 AND DepartmentName IN ('HR', 'IT');              -- Filering employees whose age is younger than 30 and work in either HR or IT.
+
+GO
+
+
+-- 25. Use LIKE with wildcard to select all customers whose Email contains the domain '@gmail.com'.
+
+SELECT 
+	*
+FROM Customers
+WHERE Email LIKE '%@gmail.com%'                                 -- Filtering email column that contains '@gmail.com' in the body. '%' makes sure that string part exists in the body of the email address.
+ORDER BY CustomerID ASC;
+
+GO
+
+-- 26. Write a query that uses the ALL operator to find employees whose salary is greater than all employees in the 'Sales' department.
+
+SELECT 
+	e.*
+FROM Employees e
+WHERE e.DepartmentName <> 'Sales'                 -- Filtering employee salaries who are not from Sales department
+AND e.Salary > ALL  (                             -- Comparing other departments' employee salaries to Sales department's employee salary, making sure that it is higher than Sales.
+	SELECT s.Salary                               -- Using subquery to make the comparison easier and to be able to use ALL operator.
+	FROM Employees s
+	WHERE s.DepartmentName = 'Sales'              -- Filtering salaries of employees from Sales department.
+	AND s.Salary IS NOT NULL);                    -- Handling NULL value, excluding them from scanning.
+
+
+-- 27. Write a query that filters the Orders table for orders placed in the last 180 days using BETWEEN and CURRENT_DATE. (Search how to get the current date)
+
+-- CURRENT_TIMESTAMP returns the current date and time (SQL Server's ANSI-standard equivalent of GETDATE())
+-- CAST(... AS DATE) removes the time portion
+-- DATEADD(day, -180, ...) correctly calculates the date 180 days ago
+
+SELECT                            
+	*
+FROM Orders
+WHERE OrderDate 
+	BETWEEN DATEADD(day, -180, CAST(CURRENT_TIMESTAMP AS DATE))     -- Converting to date type to exactly calculate days substracting 180 days. 
+    AND CAST(CURRENT_TIMESTAMP AS DATE);                            
+
+GO
+
+-- The End.
