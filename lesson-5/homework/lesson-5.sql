@@ -143,7 +143,7 @@ FROM Commons c
 INNER JOIN Products p                                                                          -- Joining the CTE with Products table. We want to know the names of the products from this table.
 ON c.ProductID = p.ProductID                                                                   -- Joining them on ProductID that matches
 INNER JOIN Products_Discounted d                                                               -- Joining the CTE with Products_Discounted table as well. We want to see the product names from this table as well.
-ON c.ProductID = d.ProductID         
+ON c.ProductID = d.ProductID;         
 
 
 -- 14. Write a query that uses CASE to assign 'Top Tier' if SaleAmount > 500, 'Mid Tier' if SaleAmount BETWEEN 200 AND 500, and 'Low Tier' otherwise. (From Sales table)
@@ -175,7 +175,7 @@ SELECT                                                                          
     c.Country
 FRoM OrderWithoutInvoice o 
 LEFT JOIN Customers c 
-ON o.CustomerID = c.CustomerID
+ON o.CustomerID = c.CustomerID;
 
 
 -- 16. Write a query that uses a CASE statement to determine the discount percentage based on the quantity purchased. Use orders table. Result set should show customerid, quantity and discount percentage. The discount should be applied as follows: 1 item: 3% Between 1 and 3 items : 5% Otherwise: 7%
@@ -187,4 +187,4 @@ SELECT
          WHEN Quantity IN (2,3) THEN '5%'                                              -- Conditional case 2 for setting 5% discount if the quantity ordered is either 2 or 3.
          ELSE '7%'                                                                     -- Conditional case 3 for setting 7% in all other cases.
     END AS DiscountPercentage
-FROM Orders
+FROM Orders;
