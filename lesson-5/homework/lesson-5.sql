@@ -31,10 +31,10 @@ ORDER BY ProductType, ProductName;                                              
 
 -- 4. Write a query to find the intersection of Products and Products_Discounted tables using INTERSECT.
 
-SELECT ProductID
+SELECT ProductID, ProductName
 FROM Products 
 INTERSECT                                                                                              -- INTERSECT uses only matching columns, so the only column that matches is ProductID
-SELECT ProductID
+SELECT ProductID, ProductName
 FROM Products_Discounted;
 
   
@@ -82,12 +82,12 @@ ORDER BY ProductType, ProductName;
 
 SELECT 
     ProductID,                                                                                     -- Selecting ProductID and ProdcutName that differs from the other table in combination.
-    ISNULL(ProductName, 'Unknown') AS ProductName                                                  -- Handling the NULL value in ProductName and aliasing it.
+    ProductName                                                
 FROM Products
 EXCEPT                                                                                              -- Selecting the products from Products table that do not match with those from Products_Discounted table. Here we are focusing on matching rule of two columns in combination (ProductID, ProductName). 
 SELECT 
     ProductID, 
-    ISNULL(ProductName, 'Unknown') AS ProductName
+    ProductName
 FROM Products_Discounted;
 
 
@@ -130,16 +130,16 @@ WHERE DepartmentName = 'HR' OR EmployeeID = 5;                                  
 
 -- 13. Use INTERSECT to show products that are common between Products and Products_Discounted tables.
 
-WITH CommonIDs AS (                                                                             -- First we want to see the intersection between 2 tables using the ID column from both tables, other columns may not match. And we put them in a CTE later to be able to use for further analysis.
-SELECT ProductID FROM Products
+WITH CommonIDs AS (                                                                             -- First we want to see the intersection between 2 tables using the ID and ProductName column from both tables. And we put them in a CTE later to be able to use for further analysis.
+SELECT ProductID, ProductName FROM Products
 INTERSECT
-SELECT ProductID FROM Products_Discounted)
+SELECT ProductID, ProductName FROM Products_Discounted)
 
 SELECT                                                                                 
     c.ProductID,                                                                               -- Selecting the ProductID from Commons CTE.
     p.ProductName AS Product_Regular,                                                          -- Selecting product name from Products table. We want to see the how the product named in Products table
     d.ProductName AS Product_Discounted                                                        -- Selecting product nmae from Products_Discounted table. We want to see the how the product named in Products_Discounted table
-FROM Commons c
+FROM CommonIDs c
 INNER JOIN Products p                                                                          -- Joining the CTE with Products table. We want to know the names of the products from this table.
 ON c.ProductID = p.ProductID                                                                   -- Joining them on ProductID that matches
 INNER JOIN Products_Discounted d                                                               -- Joining the CTE with Products_Discounted table as well. We want to see the product names from this table as well.
@@ -173,8 +173,8 @@ SELECT                                                                          
     c.FirstName,
     c.LastName,
     c.Country
-FRoM OrderWithoutInvoice o 
-LEFT JOIN Customers c 
+FRoM OrderWithoutInvoice AS o 
+LEFT JOIN Customers AS c 
 ON o.CustomerID = c.CustomerID;
 
 
