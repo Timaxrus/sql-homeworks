@@ -112,7 +112,7 @@ SELECT
 	dt.OrderID
 FROM 
 	Customers AS c
-JOIN
+LEFT JOIN
 	(SELECT
 		OrderID,
 		CustomerID,
