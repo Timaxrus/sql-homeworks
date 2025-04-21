@@ -121,53 +121,72 @@ WHERE
 
 -- 1.Write an SQL query that separates the uppercase letters, lowercase letters, numbers, and other characters from the given string 'tf56sd#%OqH' into separate columns.
 
-DECLARE @input_string NVARCHAR(MAX) = 'tf56sd#%OqH';
+DECLARE @string VARCHAR(MAX) = 'tf56sd#%OqH';
 DECLARE @position INT = 1;
-DECLARE @char NVARCHAR(1);
+DECLARE @char VARCHAR(5) = '';
 
--- Temporary variables to hold the separated results
-DECLARE @uppercase NVARCHAR(MAX) = '';
-DECLARE @lowercase NVARCHAR(MAX) = '';
-DECLARE @numbers NVARCHAR(MAX) = '';
-DECLARE @others NVARCHAR(MAX) = '';
+DECLARE @Uppercase VARCHAR(MAX) = '';
+DECLARE @Lowercase VARCHAR(MAX) = '';
+DECLARE @Numerals VARCHAR(MAX) = '';
+DECLARE @Others VARCHAR(MAX) = '';
 
--- Loop through each character in the input string
-WHILE @position <= LEN(@input_string)
+WHILE @position <= LEN(@string)
 BEGIN
-    -- Extract one character at a time
-    SET @char = SUBSTRING(@input_string, @position, 1);
+	SET @char = SUBSTRING(@string, @position, 1);
 
-    -- Categorize the character
-    IF @char LIKE '[A-Z]'
-        SET @uppercase = CONCAT(@uppercase, @char); -- Use CONCAT for better readability
-    ELSE IF @char LIKE '[a-z]'
-        SET @lowercase = CONCAT(@lowercase, @char);
-    ELSE IF @char LIKE '[0-9]'
-        SET @numbers = CONCAT(@numbers, @char);
-    ELSE
-        SET @others = CONCAT(@others, @char);
+	IF @char COLLATE Latin1_General_BIN LIKE '[A-Z]'
+		SET	@Uppercase = CONCAT(@Uppercase, @char);
+	ELSE IF @char COLLATE Latin1_General_BIN LIKE '[a-z]'
+		SET @Lowercase = CONCAT(@Lowercase, @char);
+	ELSE IF @char COLLATE Latin1_General_BIN LIKE '[0-9]'
+		SET @Numerals = CONCAT(@Numerals, @char);
+	ELSE
+		SET @Others = CONCAT(@Others, @char);
 
-    -- Move to the next position
-    SET @position = @position + 1;
+	SET @position = @position + 1
+
 END;
 
--- Display the results
 SELECT 
-    @uppercase AS Uppercase,
-    @lowercase AS Lowercase,
-    @numbers AS Numbers,
-    @others AS Others;
+	@Uppercase AS Uppercase, 
+	@Lowercase AS Lowercase,
+	@Numerals AS Numerals, 
+	@Others AS Others;
 
 
 -- 2.split column FullName into 3 part ( Firstname, Middlename, and Lastname).(Students Table)
 
-3.For every customer that had a delivery to California, provide a result set of the customer orders that were delivered to Texas. (Orders Table)
+SELECT 
+	SUBSTRING(TRIM(FullName), 1, CHARINDEX(' ',TRIM(FullName))-1) AS FirstName,
+	SUBSTRING(TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1, CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1) - CHARINDEX(' ',TRIM(FullName))-1) AS MiddleName,
+	SUBSTRING(TRIM(FullName), CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1), LEN(TRIM(FullName)) - CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1) + 1) AS LastName
+FROM Students
 
-4.Write an SQL query to transform a table where each product has a total quantity into a new table where each row represents a single unit of that product.For example, if A and B, it should be A,B and B,A.(Ungroup)
 
-5.Write an SQL statement that can group concatenate the following values.(DMLTable)
+-- 3.For every customer that had a delivery to California, provide a result set of the customer orders that were delivered to Texas. (Orders Table)
 
-6.Write an SQL query to determine the Employment Stage for each employee based on their HIRE_DATE. The stages are defined as follows:
+SELECT 
+	o.CustomerID,
+	o.OrderID,
+	o.DeliveryState,
+	o.Amount
+FROM 
+	Orders AS o
+WHERE 
+	o.DeliveryState = 'TX'
+	AND EXISTS
+			(SELECT 1 FROM Orders AS os 
+			 WHERE os.DeliveryState = 'CA' 
+			 AND os.CustomerID = o.CustomerID) 
+
+
+-- 4.Write an SQL query to transform a table where each product has a total quantity into a new table where each row represents a single unit of that product.For example, if A and B, it should be A,B and B,A.(Ungroup)
+
+
+
+-- 5.Write an SQL statement that can group concatenate the following values.(DMLTable)
+
+-- 6.Write an SQL query to determine the Employment Stage for each employee based on their HIRE_DATE. The stages are defined as follows:
 
 If the employee has worked for less than 1 year → 'New Hire'
 
