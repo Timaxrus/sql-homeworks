@@ -60,23 +60,15 @@ WHERE
 
 
 -- 6.
-SELECT * FROM Sales.Orders
---SELECT
---	o.custid,
---	o.orderid,
---	SUM(o.freight) AS TotalSales,
---	t.Weight
---FROM
---	Sales.Orders AS o
---JOIN
---	(SELECT
---		orderid,
---		SUM(qty) AS Weight
---	FROM 
---		Sales.OrderDetails
---	GROUP BY
---		orderid)t
 
+SELECT 
+    custid,
+    SUM(CASE WHEN freight > 50 THEN freight ELSE 0 END) AS TotalWeightOver50,
+    MIN(weight) AS LeastWeight
+FROM 
+    Sales.Orders
+GROUP BY 
+    custid;
 
 
 
