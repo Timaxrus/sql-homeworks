@@ -46,42 +46,45 @@ JOIN
 
 -- 5.Write a query to retrieve the year and the highest value from the columns Max1, Max2, and Max3 for each row in the TestMax table
 
-SELECT
-	t.Year1,
-	MAX(t.MaxAll) AS MaxAll
-FROM
-	(SELECT
-		t1.Year1,
-		t1.Max1 AS MaxAll
-	FROM 
-		TestMax AS t1
-	UNION ALL
-	SELECT
-		t2.Year1,
-		t2.Max2 AS MaxAll
-	FROM 
-		TestMax AS t2
-	UNION ALL
-	SELECT
-		t3.Year1,
-		t3.Max3 AS MaxAll
-	FROM 
-		TestMax AS t3) t
-GROUP BY
-	t.Year1;
+SELECT	
+	year1,
+    GREATEST(max1,max2,max3) AS MaxAll
+FROM 
+	TestMax;
 
 
 -- 6.Find me odd numbered movies description is not boring.(cinema)
 
+SELECT
+	id,
+    description
+FROM
+	cinema
+WHERE
+	id % 2 = 1
+    AND TRIM(description) != 'boring';
 
 
 -- 7.You have to sort data based on the Id but Id with 0 should always be the last row. Now the question is can you do that with a single order by column.(SingleOrder)
 
-8.Write an SQL query to select the first non-null value from a set of columns. If the first column is null, move to the next, and so on. If all columns are null, return null.(person)
+SELECT *
+FROM SingleOrder
+ORDER BY CASE WHEN Id = 0 THEN 1 ELSE 0 END, Id;
 
-9.Find the employees who have been with the company for more than 10 years, but less than 15 years. Display their Employee ID, First Name, Last Name, Hire Date, and the Years of Service (calculated as the number of years between the current date and the hire date, rounded to two decimal places).(Employees)
 
-10.Find the employees who have a salary greater than the average salary of their respective department.(Employees)
+-- 8.Write an SQL query to select the first non-null value from a set of columns. If the first column is null, move to the next, and so on. If all columns are null, return null.(person)
+
+SELECT
+	COALESCE(ssn, passportid, itin, NULL) AS SetOfCoumns
+FROM 
+	person;
+
+
+-- 9.Find the employees who have been with the company for more than 10 years, but less than 15 years. Display their Employee ID, First Name, Last Name, Hire Date, and the Years of Service (calculated as the number of years between the current date and the hire date, rounded to two decimal places).(Employees)
+
+
+
+-- 10.Find the employees who have a salary greater than the average salary of their respective department.(Employees)
 
 --Medium Tasks 1.Write an SQL query that separates the uppercase letters, lowercase letters, numbers, and other characters from the given string 'tf56sd#%OqH' into separate columns.
 
