@@ -82,13 +82,84 @@ FROM
 
 -- 9.Find the employees who have been with the company for more than 10 years, but less than 15 years. Display their Employee ID, First Name, Last Name, Hire Date, and the Years of Service (calculated as the number of years between the current date and the hire date, rounded to two decimal places).(Employees)
 
+SELECT
+	employee_id,
+    first_name,
+    last_name,
+    hire_date,
+    DATEDIFF(YEAR, hire_date, GETDATE()) AS Years_of_service
+FROM
+	Employees
+WHERE
+	DATEDIFF(YEAR, hire_date, GETDATE()) > 10
+    AND DATEDIFF(YEAR, hire_date, GETDATE()) < 15;
 
 
 -- 10.Find the employees who have a salary greater than the average salary of their respective department.(Employees)
 
---Medium Tasks 1.Write an SQL query that separates the uppercase letters, lowercase letters, numbers, and other characters from the given string 'tf56sd#%OqH' into separate columns.
+SELECT
+	e.employee_id,
+    e.department_id,
+    e.salary,
+    AvgSalary
+FROM
+	Employees AS e
+JOIN
+    (Select
+        e1.department_id,
+        AVG(e1.salary) AS AvgSalary
+    FROM 
+        Employees AS e1
+    GROUP BY
+        e1.department_id) AS AvgSal
+    ON e.DEPARTMENT_ID = AvgSal.Department_id
+WHERE
+	e.SALARY > AvgSal.AvgSalary;
 
-2.split column FullName into 3 part ( Firstname, Middlename, and Lastname).(Students Table)
+
+-- Medium Tasks 
+
+-- 1.Write an SQL query that separates the uppercase letters, lowercase letters, numbers, and other characters from the given string 'tf56sd#%OqH' into separate columns.
+
+DECLARE @input_string NVARCHAR(MAX) = 'tf56sd#%OqH';
+DECLARE @position INT = 1;
+DECLARE @char NVARCHAR(1);
+
+-- Temporary variables to hold the separated results
+DECLARE @uppercase NVARCHAR(MAX) = '';
+DECLARE @lowercase NVARCHAR(MAX) = '';
+DECLARE @numbers NVARCHAR(MAX) = '';
+DECLARE @others NVARCHAR(MAX) = '';
+
+-- Loop through each character in the input string
+WHILE @position <= LEN(@input_string)
+BEGIN
+    -- Extract one character at a time
+    SET @char = SUBSTRING(@input_string, @position, 1);
+
+    -- Categorize the character
+    IF @char LIKE '[A-Z]'
+        SET @uppercase = CONCAT(@uppercase, @char); -- Use CONCAT for better readability
+    ELSE IF @char LIKE '[a-z]'
+        SET @lowercase = CONCAT(@lowercase, @char);
+    ELSE IF @char LIKE '[0-9]'
+        SET @numbers = CONCAT(@numbers, @char);
+    ELSE
+        SET @others = CONCAT(@others, @char);
+
+    -- Move to the next position
+    SET @position = @position + 1;
+END;
+
+-- Display the results
+SELECT 
+    @uppercase AS Uppercase,
+    @lowercase AS Lowercase,
+    @numbers AS Numbers,
+    @others AS Others;
+
+
+-- 2.split column FullName into 3 part ( Firstname, Middlename, and Lastname).(Students Table)
 
 3.For every customer that had a delivery to California, provide a result set of the customer orders that were delivered to Texas. (Orders Table)
 
