@@ -182,29 +182,88 @@ WHERE
 
 -- 4.Write an SQL query to transform a table where each product has a total quantity into a new table where each row represents a single unit of that product.For example, if A and B, it should be A,B and B,A.(Ungroup)
 
+WITH MaxAll AS (
+  SELECT
+      MAX(quantity) AS MaxNum
+  FROM Ungroup)
+, Numbers AS (
+   SELECT 1 AS Num
+   UNION ALL
+   SELECT Num + 1
+   FROM Numbers
+   WHERE Num + 1 <= (SELECT MaxNum FROM MaxAll))
+ 
+, Prod_qty AS (
+   SELECT 
+     u.productdescription, 1 AS qty 
+   FROM Ungroup AS u
+   CROSS JOIN
+     Numbers AS n
+   WHERE n.Num <= u.Quantity
+     )
+, Pairs AS ( 
+   SELECT 
+     p1.productdescription AS Product1,
+     p2.productdescription AS Product2
+   FROM 
+   	 Prod_qty p1
+   CROSS JOIN 
+     Prod_qty p2
+   WHERE 
+   	 p1.productdescription <> p2.productdescription)
+
+SELECT
+	Product1,
+    Product2
+FROM Pairs
+
+UNION ALL
+
+SELECT
+	Product2 AS Product1,
+    Product1 AS Product2
+FROM Pairs;
 
 
 -- 5.Write an SQL statement that can group concatenate the following values.(DMLTable)
 
+SELECT STRING_AGG(String, ' ') 
+FROM DMLTable;
+
+
 -- 6.Write an SQL query to determine the Employment Stage for each employee based on their HIRE_DATE. The stages are defined as follows:
 
-If the employee has worked for less than 1 year → 'New Hire'
+-- If the employee has worked for less than 1 year → 'New Hire'
 
-If the employee has worked for 1 to 5 years → 'Junior'
+-- If the employee has worked for 1 to 5 years → 'Junior'
 
-If the employee has worked for 5 to 10 years → 'Mid-Level'
+-- If the employee has worked for 5 to 10 years → 'Mid-Level'
 
-If the employee has worked for 10 to 20 years → 'Senior'
+-- If the employee has worked for 10 to 20 years → 'Senior'
 
-If the employee has worked for more than 20 years → 'Veteran'(Employees)
+-- If the employee has worked for more than 20 years → 'Veteran'(Employees)
 
-7.Find the employees who have a salary greater than the average salary of their respective department(Employees)
 
-8.Find all employees whose names (concatenated first and last) contain the letter "a" and whose salary is divisible by 5(Employees)
+	SELECT 
+	CONCAT(first_name, ' ', last_name) AS EmployeeName,
+    CASE
+    	WHEN DATEDIFF(YEAR, hire_date, GETDATE()) < 1 THEN 'New Hire'
+        WHEN DATEDIFF(YEAR, hire_date, GETDATE()) >= 1 AND DATEDIFF(YEAR, hire_date, GETDATE()) <= 5 THEN 'Junior'
+        WHEN DATEDIFF(YEAR, hire_date, GETDATE()) > 5 AND DATEDIFF(YEAR, hire_date, GETDATE()) <= 10 THEN 'Med-level'
+        WHEN DATEDIFF(YEAR, hire_date, GETDATE()) > 10 AND DATEDIFF(YEAR, hire_date, GETDATE()) <= 20 THEN 'Senior'
+        ELSE 'Veteran'
+    END AS Emp_stage
+FROM 
+	Employees;
 
-9.The total number of employees in each department and the percentage of those employees who have been with the company for more than 3 years(Employees)
 
-10.Write an SQL statement that determines the most and least experienced Spaceman ID by their job description.(Personal)
+-- 7.Find the employees who have a salary greater than the average salary of their respective department(Employees)
+
+-- 8.Find all employees whose names (concatenated first and last) contain the letter "a" and whose salary is divisible by 5(Employees)
+
+-- 9.The total number of employees in each department and the percentage of those employees who have been with the company for more than 3 years(Employees)
+
+-- 10.Write an SQL statement that determines the most and least experienced Spaceman ID by their job description.(Personal)
 
 --Difficult Tasks 1.Write an SQL query that replaces each row with the sum of its value and the previous row's value. (Students table)
 
