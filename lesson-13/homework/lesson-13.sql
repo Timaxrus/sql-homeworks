@@ -160,7 +160,7 @@ SELECT
 	SUBSTRING(TRIM(FullName), 1, CHARINDEX(' ',TRIM(FullName))-1) AS FirstName,
 	SUBSTRING(TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1, CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1) - CHARINDEX(' ',TRIM(FullName))-1) AS MiddleName,
 	SUBSTRING(TRIM(FullName), CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1), LEN(TRIM(FullName)) - CHARINDEX(' ',TRIM(FullName), CHARINDEX(' ',TRIM(FullName)) + 1) + 1) AS LastName
-FROM Students
+FROM Students;
 
 
 -- 3.For every customer that had a delivery to California, provide a result set of the customer orders that were delivered to Texas. (Orders Table)
@@ -177,7 +177,7 @@ WHERE
 	AND EXISTS
 			(SELECT 1 FROM Orders AS os 
 			 WHERE os.DeliveryState = 'CA' 
-			 AND os.CustomerID = o.CustomerID) 
+			 AND os.CustomerID = o.CustomerID);
 
 
 -- 4.Write an SQL query to transform a table where each product has a total quantity into a new table where each row represents a single unit of that product.For example, if A and B, it should be A,B and B,A.(Ungroup)
@@ -259,18 +259,128 @@ FROM
 
 -- 7.Find the employees who have a salary greater than the average salary of their respective department(Employees)
 
+WITH Avg_Dept_Sal AS (
+SELECT
+	DEPARTMENT_ID,
+	AVG(SALARY) AS Avg_Sal
+FROM 
+	Employees
+GROUP BY
+	DEPARTMENT_ID)
+
+SELECT
+	CONCAT(FIRST_NAME, ' ', LAST_NAME) AS EmployeeName
+FROM 
+	Employees AS e
+JOIN 
+	Avg_Dept_Sal
+	ON e.DEPARTMENT_ID = Avg_Dept_Sal.DEPARTMENT_ID
+WHERE
+	e.SALARY > Avg_Dept_Sal.Avg_Sal;
+
+
 -- 8.Find all employees whose names (concatenated first and last) contain the letter "a" and whose salary is divisible by 5(Employees)
+
+SELECT
+	CONCAT(FIRST_NAME, ' ', LAST_NAME) AS EmployeeName
+FROM
+	Employees
+WHERE
+	CAST(SALARY AS decimal(10,2)) % 5 = 0 
+	AND CONCAT(FIRST_NAME, ' ', LAST_NAME) LIKE '%a%';
+
 
 -- 9.The total number of employees in each department and the percentage of those employees who have been with the company for more than 3 years(Employees)
 
+WITH NumOfEmp AS (
+SELECT
+	e.DEPARTMENT_ID,
+	COUNT(e.EMPLOYEE_ID) AS EmpNumByDept,
+	SUM(CASE WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) > 3 THEN 1 ELSE 0 END) AS EmpOverThreeYears
+FROM
+	Employees AS e	
+GROUP BY
+	e.DEPARTMENT_ID)
+
+SELECT
+	DEPARTMENT_ID,
+	EmpNumByDept,
+	CONCAT(CAST(EmpOverThreeYears AS float) / CAST(EmpNumByDept AS float) * 100, '%') AS EmpPercentage
+FROM NumOfEmp;
+
+
 -- 10.Write an SQL statement that determines the most and least experienced Spaceman ID by their job description.(Personal)
 
---Difficult Tasks 1.Write an SQL query that replaces each row with the sum of its value and the previous row's value. (Students table)
+WITH MinMax AS (
+SELECT
+	SpacemanID,
+	JobDescription,
+	MissionCount,
+	ROW_NUMBER() OVER (PARTITION BY JobDescription ORDER BY MissionCount ASC) AS MinExp,
+	ROW_NUMBER() OVER (PARTITION BY JobDescription ORDER BY MissionCount DESC) AS MaxExp
+FROM Personal)
+SELECT
+	JobDescription,
+	MIN(CASE WHEN MinExp = 1 THEN SpacemanID END) AS MinExp ,
+	MIN(CASE WHEN MaxExp = 1 THEN SpacemanID END) AS MaxExp
+FROM MinMax
+GROUP BY JobDescription;
 
-2.Given the following hierarchical table, write an SQL statement that determines the level of depth each employee has from the president. (Employee table)
 
-3.You are given the following table, which contains a VARCHAR column that contains mathematical equations. Sum the equations and provide the answers in the output.(Equations)
+--Difficult Tasks 
 
-4.Given the following dataset, find the students that share the same birthday.(Student Table)
+-- 1.Write an SQL query that replaces each row with the sum of its value and the previous row's value. (Students table)
+
+SELECT
+	*,
+	Grade + LAG(Grade, 1, 0) OVER (ORDER BY StudentID) AS RunningSum
+FROM Students;
+
+-- 2.Given the following hierarchical table, write an SQL statement that determines the level of depth each employee has from the president. (Employee table)
+
+WITH Steps AS (
+SELECT
+	EmployeeID,
+	ManagerID,
+	JobTitle,
+	0 AS DepthLvl
+FROM Employee 
+WHERE ManagerID IS NULL
+UNION ALL
+SELECT
+	e.EmployeeID,
+	e.ManagerID,
+	e.JobTitle,
+	s.DepthLvl + 1 AS DepthLvl
+FROM Employee AS e
+JOIN Steps AS s
+	ON e.ManagerID = s.EmployeeID)
+SELECT
+	EmployeeID,
+	ManagerID,
+	JobTitle,
+	DepthLvl
+FROM Steps;
+
+
+-- 3.You are given the following table, which contains a VARCHAR column that contains mathematical equations. Sum the equations and provide the answers in the output.(Equations)
+
+
+DECLARE @pos INT = 1
+WITH Suu AS (
+
+SELECT
+Equation,
+SUBSTRING(Equation, @pos, 1) AS subs
+FROM Equations
+UNION ALL
+SELECT @pos = @pos + 1 AS step
+FROM Suu
+WHERE @pos <= LEN(Equation)
+
+SELECT subs FROM Suu
+
+
+-- 4.Given the following dataset, find the students that share the same birthday.(Student Table)
 
 5.You have a table with two players (Player A and Player B) and their scores. If a pair of players have multiple entries, aggregate their scores into a single row for each unique pair of players. Write an SQL query to calculate the total score for each unique player pair(PlayerScores)
