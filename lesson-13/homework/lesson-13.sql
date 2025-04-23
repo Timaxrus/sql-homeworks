@@ -36,12 +36,13 @@ ORDER BY
 
 SELECT DISTINCT
 	e.MANAGER_ID,
-	m.SALARY
+	SUM(m.SALARY)
 FROM
 	Employees AS e
 JOIN
 	Employees AS m
-	ON e.MANAGER_ID = m.EMPLOYEE_ID;
+	ON e.MANAGER_ID = m.EMPLOYEE_ID
+GROUP BY e.MANAGER_ID;
 
 
 -- 5.Write a query to retrieve the year and the highest value from the columns Max1, Max2, and Max3 for each row in the TestMax table
