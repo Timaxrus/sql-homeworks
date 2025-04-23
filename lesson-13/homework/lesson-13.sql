@@ -366,21 +366,37 @@ FROM Steps;
 -- 3.You are given the following table, which contains a VARCHAR column that contains mathematical equations. Sum the equations and provide the answers in the output.(Equations)
 
 
-DECLARE @pos INT = 1
-WITH Suu AS (
-
-SELECT
-Equation,
-SUBSTRING(Equation, @pos, 1) AS subs
-FROM Equations
-UNION ALL
-SELECT @pos = @pos + 1 AS step
-FROM Suu
-WHERE @pos <= LEN(Equation)
-
-SELECT subs FROM Suu
 
 
 -- 4.Given the following dataset, find the students that share the same birthday.(Student Table)
 
-5.You have a table with two players (Player A and Player B) and their scores. If a pair of players have multiple entries, aggregate their scores into a single row for each unique pair of players. Write an SQL query to calculate the total score for each unique player pair(PlayerScores)
+SELECT
+	st1.StudentName AS Student1,
+	st2.StudentName AS Student2
+FROM 
+	Student AS st1
+JOIN
+	Student AS st2
+	ON st1.Birthday = st2.Birthday
+WHERE st1.Birthday = st2.Birthday
+AND st1.StudentName < st2.StudentName;
+
+
+-- 5.You have a table with two players (Player A and Player B) and their scores. If a pair of players have multiple entries, 
+--aggregate their scores into a single row for each unique pair of players. Write an SQL query to calculate the total score 
+--for each unique player pair(PlayerScores)
+
+WITH Division AS (
+SELECT
+	CASE WHEN PlayerA < PlayerB THEN PlayerA ELSE PlayerB END AS PlayerA,
+	CASE WHEN PlayerA < PlayerB THEN PlayerB ELSE PlayerA END AS PlayerB,
+	Score
+FROM PlayerScores)
+
+SELECT
+	PlayerA,
+	PLayerB,
+	SUM(Score)
+FROM Division
+GROUP BY PlayerA, PlayerB;
+
