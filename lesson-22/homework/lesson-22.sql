@@ -111,7 +111,16 @@ FROM sales_data;
 
 -- 12.
 
+
 SELECT
 	ID,
-    SUM(COALESCE(LAG(ID)) OVER(ORDER BY ID), 0)
+	SUM(ID) OVER(ORDER BY (SELECT NULL) ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS vrem
 FROM (VALUES (1), (2), (3), (4), (5)) AS TestValue(ID)
+
+
+-- 13.
+
+SELECT
+	Value,
+	LAG(Value, 1, 0) OVER(ORDER BY (SELECT NULL)) + Value AS SumWithPreVal
+FROM OneColumn;
