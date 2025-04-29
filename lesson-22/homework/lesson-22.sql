@@ -124,3 +124,27 @@ SELECT
 	Value,
 	LAG(Value, 1, 0) OVER(ORDER BY (SELECT NULL)) + Value AS SumWithPreVal
 FROM OneColumn;
+
+-- 14. 
+
+SELECT 
+    Id,
+    Vals,
+    ROW_NUMBER() OVER (ORDER BY Id, Vals) AS BaseRowNum,
+	CASE WHEN LAG(Id) OVER(ORDER BY Id) IS NULL THEN ROW_NUMBER() OVER (ORDER BY Id, Vals)
+		WHEN Id = LAG(Id) OVER(ORDER BY Id) THEN ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1
+		WHEN Id != LAG(Id) OVER(ORDER BY Id) AND (ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1) % 2 = 0
+		THEN ROW_NUMBER() OVER (ORDER BY Id, Vals) + 2
+		ELSE ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1 END AS Final
+INTO #MyBurden
+FROM Row_Nums
+ORDER BY Id, Vals;
+
+SELECT 
+    Id,
+    Vals,
+    CASE 
+        WHEN Id != LAG(Id) OVER(ORDER BY Id) AND Final = LAG(Final) OVER(ORDER BY Id) 
+			 THEN Final + 2
+        ELSE Final END AS Final
+FROM #MyBurden;
