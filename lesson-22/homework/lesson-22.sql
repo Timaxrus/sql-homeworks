@@ -329,3 +329,33 @@ SELECT
 
 -- 25. 
 
+SELECT 
+    Id,
+    Vals,
+    ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1 AS BaseRowNum,
+	CASE WHEN LAG(Id) OVER(ORDER BY Id) IS NULL THEN ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1
+		WHEN Id = LAG(Id) OVER(ORDER BY Id) THEN ROW_NUMBER() OVER (ORDER BY Id, Vals) + 2
+		WHEN Id != LAG(Id) OVER(ORDER BY Id) AND (ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1) % 2 != 0
+		THEN ROW_NUMBER() OVER (ORDER BY Id, Vals) + 2
+		ELSE ROW_NUMBER() OVER (ORDER BY Id, Vals) + 1 END AS Final
+INTO #SameBurden
+FROM Row_Nums
+ORDER BY Id, Vals;
+
+WITH EvenNum AS (
+SELECT 
+    Id,
+    Vals,
+    CASE 
+        WHEN Id != LAG(Id) OVER(ORDER BY Id) AND Final = LAG(Final) OVER(ORDER BY Id) 
+			 THEN Final + 2
+		WHEN Id != LAG(Id) OVER(ORDER BY Id) AND Final = Final + 2 THEN Final + 4 
+        ELSE Final END AS Final
+FROM #SameBurden
+)
+SELECT
+	Id,
+	Vals,
+	CASE WHEN Id != LAG(Id) OVER(ORDER BY Id) AND Final = LAG(Final) OVER(ORDER BY Id) AND Final + 1 % 2 != 0 THEN Final + 2
+		ELSE Final END AS Final
+FROM EvenNum;
